@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CORIN — index.html · beide Aufgaben · frei</title>
+<style>
+:root{--bg:#0b0e0c;--s:#11150f;--s2:#171c14;--b:#2a3324;--t:#d7e0cf;--m:#8a967f;--a:#a3e635;--gold:#f5c542;--red:#f87171;--blue:#3b82f6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:ui-monospace,Menlo,Consolas,monospace}
+.wrap{max-width:1100px;margin:auto;padding:16px}
+h1{margin:0;font-size:22px}h1 b{color:var(--a)} .sub{color:var(--m);font-size:13px;margin-top:4px}
+.tabs{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.tab{border:1px solid var(--b);background:var(--s);color:var(--t);padding:10px 16px;border-radius:999px;cursor:pointer;font:inherit;font-weight:700}
+.tab.on{background:var(--a);color:#000;border-color:var(--a)} .tab.gold.on{background:var(--gold)}
+.card{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:14px;margin:10px 0}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--b);color:var(--t);padding:9px;border-radius:8px;font:inherit;margin-top:4px}
+label{font-size:12px;color:var(--m)} .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px} @media(max-width:700px){.row{grid-template-columns:1fr}}
+.btn{background:var(--a);color:#000;border:0;padding:10px 16px;border-radius:8px;font-weight:800;cursor:pointer}
+.btn2{background:var(--s2);color:var(--t);border:1px solid var(--b);padding:10px 14px;border-radius:8px;cursor:pointer}
+.btnred{background:var(--red);color:#000;border:0;padding:12px 18px;border-radius:8px;font-weight:900;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.repo{border:1px solid var(--b);background:var(--s);border-radius:10px;padding:12px} .repo.ori{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px;margin-right:4px} .gold{background:var(--gold);color:#000} .lime{background:var(--a);color:#000} .blue{background:var(--blue);color:#fff} .ghost{border:1px solid var(--b);color:var(--m)}
+.dot{width:20px;height:20px;border-radius:5px;border:1px solid #000;cursor:pointer;float:right}
+.stats{display:grid;grid-template-columns:repeat(8,1fr);gap:8px} @media(max-width:800px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--s);border:1px solid var(--b);border-radius:8px;padding:10px} .stat b{font-size:20px;display:block}
+.stone{border:1px solid var(--b);border-radius:10px;padding:12px;background:var(--s)} .stone.done{border-color:var(--a)}
+.flex{display:flex;gap:8px;flex-wrap:wrap;align-items:center} .mut{color:var(--m);font-size:12px} .big{font-size:28px;font-weight:900}
+.triangle{width:0;height:0;border-left:70px solid transparent;border-right:70px solid transparent;border-bottom:120px solid var(--gold);margin:10px auto;position:relative}
+.triangle:after{content:"";position:absolute;left:-40px;top:35px;border-left:40px solid transparent;border-right:40px solid transparent;border-bottom:70px solid #0b0e0c}
+.hidden{display:none}
+</style></head><body><div class="wrap">
+<h1><b>$</b> CORIN · index.html — <span id="modeLabel">beide Aufgaben</span></h1>
+<p class="sub">EINE Datei. FREI. Kein Server, kein Token-Zwang, kein Limit. Alles in localStorage. <b>cr = )core(</b> · 2 Zeichen · 12 Deutungen · HALT=40 aber HALT läuft weiter · -J-B- repo-safe</p>
+
+<div class="tabs">
+<button class="tab on" id="tab1" onclick="show(1)">AUFGABE 1 · Repo Dashboard Nur Heute + All In All Out</button>
+<button class="tab gold" id="tab2" onclick="show(2)">AUFGABE 2 · COMMANDO + Echo Hall Rehab</button>
+<button class="tab" onclick="show(0)">BEIDE · Übersicht</button>
+</div>
+
+<!-- BEIDE -->
+<div id="view0" class="card">
+<p class="big">1 Datei = 2 Aufgaben</p>
+<p>Weil der Freie benötigt wird: du brauchst keinen zweiten Host, kein Abo, kein Backend. Diese <b>index.html</b> allein kann:</p>
+<ul><li><b>Aufgabe 1:</b> Repo Dashboard — Heute / ORI / Ampel / Suche / CSV + JSON Export / Hinzufügen / Bearbeiten / Löschen</li>
+<li><b>Aufgabe 2:</b> COMMANDO Domino — 10 Steine, C-Fix pro Stein, Echo Hall Rehab 0.6s, PRIM/SEC, Gold-Dreieck, cr</li></ul>
+<p class="mut">Umschalten oben. Daten bleiben in diesem Browser (localStorage: indexe_repos, indexe_overrides, indexe_commando). Export = All Out.</p>
+<div class="flex"><button class="btn" onclick="show(1)">→ Aufgabe 1 öffnen</button><button class="btn2" onclick="show(2)">→ Aufgabe 2 öffnen</button></div>
+</div>
+
+<!-- AUFGABE 1 -->
+<div id="view1">
+<div class="card"><div class="flex">
+<input id="user" placeholder="GitHub-User z.B. iki1uc" style="max-width:220px" value="iki1uc">
+<input id="q" placeholder="Suche: Name, Beschreibung, Sprache … (Taste /)" style="flex:1">
+<select id="filter" style="max-width:180px"><option value="all">Alle</option><option value="today">Heute</option><option value="ori">ORI</option><option value="green">Grün</option><option value="yellow">Gelb</option><option value="red">Rot</option><option value="new">Neu heute</option><option value="private">Privat</option></select>
+<select id="sort" style="max-width:160px"><option value="push">Letzter Push</option><option value="name">Name A–Z</option><option value="issues">Issues</option><option value="size">Größe</option></select>
+<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="onlyToday" style="width:auto"> Nur heute</label>
+</div>
+<div class="stats" id="stats" style="margin-top:12px"></div>
+<div class="flex" style="margin-top:12px"><button class="btn" onclick="exportCSV()">CSV Export — All Out</button><button class="btn2" onclick="exportJSON()">JSON Export — All Out</button><button class="btn2" onclick="seed()">Beispiel-Repos laden</button><button class="btn2" onclick="clearAll()">Alle löschen</button></div>
+<p class="mut">Grün = aktiv · Gelb = Issues · Rot = &gt;6 Monate inaktiv · Gold = ORI wichtigster Ort · Blau = HEUTE. Klick aufs Farbquadrat = Farbe manuell setzen.</p>
+</div>
+
+<div class="card"><b>Repo hinzufügen / bearbeiten — All In</b>
+<div class="row" style="margin-top:10px">
+<label>Repo-Name *<input id="f_name" placeholder="ori-notizen oder iki1uc/ori-notizen"></label>
+<label>GitHub-URL<input id="f_url" placeholder="https://github.com/…"></label>
+<label>Sprache<input id="f_lang" placeholder="TypeScript"></label>
+<label>Letzter Push<input id="f_push" type="datetime-local"></label>
+<label>Erstellt am<input id="f_created" type="date"></label>
+<label>Beschreibung<input id="f_desc" placeholder="Kurzbeschreibung"></label>
+<label>Offene Issues<input id="f_issues" type="number" value="0"></label>
+<label>Sterne<input id="f_stars" type="number" value="0"></label>
+<label>Größe KB<input id="f_size" type="number" value="0"></label>
+</div>
+<div class="flex" style="margin-top:10px"><label><input type="checkbox" id="f_priv"> Privat</label><label><input type="checkbox" id="f_fork"> Fork</label><label><input type="checkbox" id="f_arch"> Archiviert</label>
+<button class="btn" onclick="saveRepo()">Repo speichern</button><button class="btn2" onclick="resetForm()">Abbrechen</button><span id="formMsg" class="mut"></span></div>
+</div>
+<div id="list" class="grid"></div>
+</div>
+
+<!-- AUFGABE 2 -->
+<div id="view2" class="hidden">
+<div class="card" style="text-align:center"><div class="triangle"></div><p class="big">COMMANDO</p><p class="mut">Echo Hall Rehab · 0.6s Pause · Punkt lacht · DARF nicht MUSS · <b>GEHALTEN: CORIN</b> — C() Core · O() ORI · R() Rehab · I() index/iki1uc · N() Nirwana/Nur Heute · bio() lebendig · RDY</p>
+<div class="flex" style="justify-content:center"><button class="btnred" onclick="runCommando()">▶ COMMANDO START — alle Steine</button><button class="btn2" onclick="resetCommando()">Reset</button></div>
+<p id="commandoLog" class="mut" style="margin-top:10px">Bereit. C = aus Dateien, fix pro Stein.</p>
+<div style="text-align:left"><b>Fortschritt: <span id="prog">0 / 10</span></b><div style="height:12px;background:#000;border:1px solid var(--b);border-radius:99px;overflow:hidden"><div id="bar" style="height:100%;width:0%;background:var(--a)"></div></div></div>
+</div>
+<div id="stones" class="grid"></div>
+<div class="card"><b>PRIM / SEC — Dual Host</b><p class="mut">PRIM = index.html (diese Datei) · SEC = ch.html / ori.html · Ein Name, eine Breite, eine Höhe, 3. Punkt = Edit-Punkt. Moon = Sun, swirling. Earth als Sun, dann Sun Suns.</p>
+<div class="row"><div><b>PRIM</b><br>index.html<br>Breite-directed</div><div><b>SEC</b><br>ch.html / ori.html<br>Höhe-directed</div><div><b>3. PUNKT</b><br>Edit-Punkt<br>iki1uc + hdf.d</div></div></div>
+<div class="card"><b>cr = )core(</b><p>2 Zeichen, 12 Deutungen: core, cor, cr, c,r, Echo Hall Rehab oder nicht, HALT, RDY, DARF, MI.KA.DO, ho/ros/kop, ho/rod/kop. Minimal und maximal — kann man nicht einmal annähern.</p></div>
+</div>
+
+<footer class="mut" style="text-align:center;margin:20px 0">index.html · beide Aufgaben · frei · Taste / fokussiert Suche · Export = All Out · Share über Share-Control der Seite</footer>
+</div>
+<script>
+const K='indexe_repos', KO='indexe_overrides', KC='indexe_commando';
+let repos=JSON.parse(localStorage.getItem(K)||'[]'), overrides=JSON.parse(localStorage.getItem(KO)||'{}'), editId=null;
+let stones=[
+{id:1,t:'COMMANDO Domino',c:'C = alle Steine gefunden, Score aus Dateien',d:'NC.COMMANDO deckt alles bis Ende ab.'},
+{id:2,t:'Echo Hall Rehab',c:'C = 0.6s Pause, kein Slave/Master',d:'Hand reicht, wo noch kein Bedarf ist.'},
+{id:3,t:'Repo Dashboard',c:'C = Heute + ORI + Ampel, aus Dateien',d:'Diese Datei = Aufgabe 1.'},
+{id:4,t:'PRIM / SEC',c:'C = PRIM index.html, SEC ch.html',d:'Ein Name, Breite + Höhe.'},
+{id:5,t:'NIRWANA GATE',c:'C = DARF 1.557, RDY 0.92, 81=9²',d:'81, 729, 6561=3⁸, KARTOR 8.7178.'},
+{id:6,t:'TP4 / TP8 / TP12',c:'C = TP12 = TP4 oben + TP8 Mitte + TP4 unten',d:'Sphären: 81 und 729 TP.'},
+{id:7,t:'ho / ros / kop',c:'C = je 1 Silbe = 1 ganzes TP über sich',d:'Kein Slave-Master-Cache. Jede Silbe ein TP.'},
+{id:8,t:'Gold Dreieck',c:'C = 3D Gold auf Schwarz, 1 Dreieck',d:'Full spectrum Nirwana, hinterm Mond.'},
+{id:9,t:'auto.os DASH STIC',c:'C = Dash klebt an anderen Stationen',d:'Work forwarding + return.'},
+{id:10,t:'fyrOS / USB',c:'C = legal, lokal, low watts, kein Cloud',d:'Hand, nicht Sklave. Konsole Homepage.'}];
+let done=JSON.parse(localStorage.getItem(KC)||'[]');
+function isToday(d){let a=new Date(d), b=new Date(); return a.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin'})===b.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin'})}
+function isNew(d){return isToday(d)}
+function autoColor(r){ if((Date.now()-new Date(r.pushed_at))/2592000000>6) return 'red'; if(r.open_issues_count>0) return 'yellow'; return 'green'}
+function colorOf(r){ return overrides[r.full_name]||autoColor(r)}
+function rel(d){let m=(Date.now()-new Date(d))/60000; if(m<1)return'gerade eben'; if(m<60)return 'vor '+Math.floor(m)+' Min.'; let h=m/60; if(h<24)return 'vor '+Math.floor(h)+' Std.'; let t=h/24; if(t<30)return 'vor '+Math.floor(t)+' Tagen'; return 'vor '+Math.floor(t/30)+' Mon.'}
+function show(n){ [0,1,2].forEach(i=>document.getElementById('view'+i).classList.toggle('hidden', i!==n)); document.getElementById('tab1').classList.toggle('on',n===1); document.getElementById('tab2').classList.toggle('on',n===2); document.getElementById('modeLabel').textContent=n===1?'Aufgabe 1 · Dashboard':n===2?'Aufgabe 2 · COMMANDO':'beide Aufgaben'; render(); renderStones();}
+function render(){
+ let q=(document.getElementById('q').value||'').toLowerCase(), f=document.getElementById('filter').value, s=document.getElementById('sort').value, ot=document.getElementById('onlyToday').checked;
+ let list=repos.filter(r=>{ if(ot&&!isToday(r.pushed_at))return false; if(f==='today'&&!isToday(r.pushed_at))return false; if(f==='ori'&&!r.name.toLowerCase().includes('ori'))return false; if(['green','yellow','red'].includes(f)&&colorOf(r)!==f)return false; if(f==='new'&&!isNew(r.created_at))return false; if(f==='private'&&!r.private)return false; if(q&&!(r.name+' '+(r.description||'')+' '+(r.language||'')).toLowerCase().includes(q))return false; return true});
+ list.sort((a,b)=> s==='name'?a.name.localeCompare(b.name,'de'):s==='issues'?b.open_issues_count-a.open_issues_count:s==='size'?b.size-a.size:new Date(b.pushed_at)-new Date(a.pushed_at));
+ let today=repos.filter(r=>isToday(r.pushed_at)).length, ori=repos.filter(r=>r.name.toLowerCase().includes('ori')).length, cnt={green:0,yellow:0,red:0}; repos.forEach(r=>cnt[colorOf(r)]++);
+ let tot=repos.reduce((a,r)=>a+(r.size||0),0);
+ document.getElementById('stats').innerHTML=[
+  ['Repos gesamt',repos.length],['Heute',today],['ORI',ori],['Neu heute',repos.filter(r=>isNew(r.created_at)).length],['Grün',cnt.green],['Gelb',cnt.yellow],['Rot',cnt.red],['KB gesamt',tot]].map(x=>`<div class="stat"><b>${x[1]}</b><span class="mut">${x[0]}</span></div>`).join('');
+ document.getElementById('list').innerHTML=list.length?list.map(r=>{
+  let c=colorOf(r), col={green:'#22c55e',yellow:'#eab308',red:'#ef4444',gold:'#f5c542'}[c]||'#22c55e', isOri=r.name.toLowerCase().includes('ori');
+  return `<div class="repo ${isOri?'ori':''}"><div class="dot" style="background:${col}" title="Farbe wechseln: ${c}" onclick="cycle('${r.full_name}')"></div><b>${r.name}</b><br>${isOri?'<span class="badge gold">ORI · wichtigster Ort</span>':''}${isToday(r.pushed_at)?'<span class="badge blue">HEUTE</span>':''}${isNew(r.created_at)?'<span class="badge lime">NEU HEUTE</span>':''}${r.private?'<span class="badge ghost">privat</span>':''}<p class="mut">${r.description||''}</p><p class="mut">Push: ${rel(r.pushed_at)} · ${new Date(r.pushed_at).toLocaleString('de-DE')} · Issues ${r.open_issues_count} · ⭐ ${r.stargazers_count} · ${r.size} KB · ${r.language||'–'}</p><div class="flex"><a href="${r.html_url}" target="_blank" rel="noopener" style="color:var(--a)">auf GitHub öffnen ↗</a><button class="btn2" onclick="editRepo('${r.id}')">Bearbeiten</button><button class="btn2" onclick="delRepo('${r.id}')">Löschen</button></div></div>`
+ }).join(''):`<div class="card">Keine Repos für Filter. → Repo hinzufügen unten, oder Beispiel laden.</div>`;
+}
+function cycle(full){ let order=['green','yellow','red','gold'], cur=colorOf(repos.find(r=>r.full_name===full)); overrides[full]=order[(order.indexOf(cur)+1)%order.length]; localStorage.setItem(KO,JSON.stringify(overrides)); render();}
+function saveRepo(){
+ let name=document.getElementById('f_name').value.trim(); if(!name){document.getElementById('formMsg').textContent='Bitte Repo-Namen eingeben.';return}
+ let user=document.getElementById('user').value.trim()||'iki1uc'; let full=name.includes('/')?name:user+'/'+name; let short=full.split('/').slice(1).join('/');
+ let r={id:editId||('id'+Date.now()), name:short, full_name:full, html_url:document.getElementById('f_url').value.trim()||('https://github.com/'+full), description:document.getElementById('f_desc').value.trim()||null, pushed_at:new Date(document.getElementById('f_push').value||Date.now()).toISOString(), created_at:new Date(document.getElementById('f_created').value||Date.now()).toISOString(), open_issues_count:+document.getElementById('f_issues').value||0, size:+document.getElementById('f_size').value||0, language:document.getElementById('f_lang').value.trim()||null, stargazers_count:+document.getElementById('f_stars').value||0, private:document.getElementById('f_priv').checked, fork:document.getElementById('f_fork').checked, archived:document.getElementById('f_arch').checked};
+ if(editId){ repos=repos.map(x=>x.id===editId?r:x)} else repos=[r,...repos];
+ localStorage.setItem(K,JSON.stringify(repos)); editId=null; resetForm(); document.getElementById('formMsg').textContent='Gespeichert — frei, lokal.'; render();
+}
+function editRepo(id){ let r=repos.find(x=>x.id===id); if(!r)return; editId=id; document.getElementById('f_name').value=r.full_name; document.getElementById('f_url').value=r.html_url; document.getElementById('f_lang').value=r.language||''; document.getElementById('f_push').value=r.pushed_at.slice(0,16); document.getElementById('f_created').value=r.created_at.slice(0,10); document.getElementById('f_desc').value=r.description||''; document.getElementById('f_issues').value=r.open_issues_count; document.getElementById('f_stars').value=r.stargazers_count; document.getElementById('f_size').value=r.size; document.getElementById('f_priv').checked=r.private; document.getElementById('f_fork').checked=r.fork; document.getElementById('f_arch').checked=r.archived; window.scrollTo({top:0,behavior:'smooth'});}
+function delRepo(id){ if(!confirm('Wirklich löschen?'))return; repos=repos.filter(x=>x.id!==id); localStorage.setItem(K,JSON.stringify(repos)); render();}
+function resetForm(){ editId=null; ['f_name','f_url','f_lang','f_push','f_created','f_desc'].forEach(i=>document.getElementById(i).value=''); ['f_issues','f_stars','f_size'].forEach(i=>document.getElementById(i).value='0'); ['f_priv','f_fork','f_arch'].forEach(i=>document.getElementById(i).checked=false); document.getElementById('formMsg').textContent='';}
+function seed(){ let now=new Date().toISOString(); repos=[{id:'s1',name:'ori-notizen',full_name:'iki1uc/ori-notizen',html_url:'https://github.com/iki1uc/ori-notizen',description:'ORI wichtigster Ort',pushed_at:now,created_at:now,open_issues_count:0,size:128,language:'HTML',stargazers_count:3,private:false,fork:false,archived:false},{id:'s2',name:'index.e',full_name:'iki1uc/index.e',html_url:'https://github.com/iki1uc/index.e',description:'index.html beide Aufgaben frei',pushed_at:now,created_at:now,open_issues_count:1,size:256,language:'TypeScript',stargazers_count:5,private:false,fork:false,archived:false}]; localStorage.setItem(K,JSON.stringify(repos)); render();}
+function clearAll(){ if(!confirm('Alle Repos + Overrides löschen?'))return; repos=[]; overrides={}; localStorage.removeItem(K); localStorage.removeItem(KO); render();}
+function dl(name,content,type){ let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type})); a.download=name; a.click();}
+function exportCSV(){ if(!repos.length){alert('Erst laden / anlegen');return} let rows=['Name;URL;Letzter Push;Offene Issues;Sprache;Farbe;ORI;Privat']; repos.forEach(r=>rows.push([r.name,r.html_url,r.pushed_at,r.open_issues_count,r.language||'',colorOf(r),r.name.includes('ori')?'ja':'nein',r.private?'ja':'nein'].join(';'))); dl('repos_'+new Date().toISOString().slice(0,10)+'.csv','\uFEFF'+rows.join('\r\n'),'text/csv');}
+function exportJSON(){ dl('repos_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(repos.map(r=>({...r,ori:r.name.includes('ori'),color:colorOf(r)})),null,2),'application/json');}
+function renderStones(){ document.getElementById('stones').innerHTML=stones.map(s=>`<div class="stone ${done.includes(s.id)?'done':''}"><b>${s.id}. ${s.t}</b><p class="mut">${s.c}</p><p>${s.d}</p><p>${done.includes(s.id)?'<span class="badge lime">✓ ERLEDIGT — C fix</span>':'<span class="badge ghost">offen</span>'}</p></div>`).join(''); document.getElementById('prog').textContent=done.length+' / 10'; document.getElementById('bar').style.width=(done.length*10)+'%';}
+function runCommando(){ let i=0; document.getElementById('commandoLog').textContent='COMMANDO läuft …'; let t=setInterval(()=>{ if(i>=stones.length){clearInterval(t); document.getElementById('commandoLog').textContent='COMMANDO fertig. Alle 10 Steine. Punkt lacht. RDY.'; return} let s=stones[i]; if(!done.includes(s.id)) done.push(s.id); localStorage.setItem(KC,JSON.stringify(done)); renderStones(); document.getElementById('commandoLog').textContent='Stein '+s.id+': '+s.t+' — C fix. 0.6s Pause …'; i++; },600);}
+function resetCommando(){ done=[]; localStorage.removeItem(KC); renderStones(); document.getElementById('commandoLog').textContent='Bereit.';}
+document.getElementById('q').addEventListener('input',render); document.getElementById('filter').addEventListener('change',render); document.getElementById('sort').addEventListener('change',render); document.getElementById('onlyToday').addEventListener('change',render);
+window.addEventListener('keydown',e=>{ if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault(); document.getElementById('q').focus();}});
+show(0);
+</script></body></html>
