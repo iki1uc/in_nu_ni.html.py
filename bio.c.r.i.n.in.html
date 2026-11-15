@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>lvl — Repo Dashboard Nur Heute & ORI Scanner</title>
+<style>
+:root{--bg:#0b0e0c;--s:#11150f;--s2:#171c14;--b:#2a3324;--t:#d7e0cf;--m:#8a967f;--a:#a3e635;--gold:#f5c542;--red:#f87171}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:ui-monospace,Menlo,Consolas,monospace}
+.wrap{max-width:1100px;margin:auto;padding:16px}
+h1{margin:0;font-size:22px}h1 b{color:var(--a)}.sub{color:var(--m);font-size:13px;margin-top:4px}
+.card{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:14px;margin:12px 0}
+input,select{width:100%;background:var(--bg);border:1px solid var(--b);color:var(--t);padding:9px;border-radius:8px;font:inherit;margin-top:4px}
+label{font-size:12px;color:var(--m)}.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}@media(max-width:700px){.row{grid-template-columns:1fr}}
+.btn{background:var(--a);color:#000;border:0;padding:10px 16px;border-radius:8px;font-weight:800;cursor:pointer}
+.btn2{background:var(--s2);color:var(--t);border:1px solid var(--b);padding:10px 14px;border-radius:8px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.repo{border:1px solid var(--b);background:var(--s);border-radius:10px;padding:12px}.repo.ori{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px;margin-right:4px}.gold{background:var(--gold);color:#000}.lime{background:var(--a);color:#000}.ghost{border:1px solid var(--b);color:var(--m)}
+.dot{width:20px;height:20px;border-radius:5px;border:1px solid #000;cursor:pointer;float:right}
+.stats{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}@media(max-width:800px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--s);border:1px solid var(--b);border-radius:8px;padding:10px}.stat b{font-size:20px;display:block}
+.flex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.mut{color:var(--m);font-size:12px}
+.pill{border:1px solid var(--b);background:var(--s);padding:6px 12px;border-radius:999px;cursor:pointer;font:inherit;color:var(--m);font-weight:700}.pill.on{background:var(--a);color:#000}.pill.on-gold{background:var(--gold);color:#000}
+</style></head><body><div class="wrap">
+<h1><b>$</b> lvl — Repo Dashboard</h1>
+<p class="sub">lvl bei index.html: dieselbe Logik, ohne React-Bundle, ohne Server, ohne Limit. Alles lokal. <b>1 Datei = 1 Level.</b> index.html bleibt wie sie ist — lvl liegt daneben, als eigene Schicht. Daten: localStorage <code>lvl_repos</code> + <code>lvl_overrides</code>.</p>
+<p class="sub">Grün = aktiv · Gelb = offene Issues · Rot = &gt;6 Monate inaktiv · Gold = ORI · Klick aufs Farbquadrat = Farbe manuell setzen (bleibt).</p>
+
+<div class="card"><div class="flex">
+<input id="user" value="iki1uc" style="max-width:200px" placeholder="GitHub-User">
+<input id="q" placeholder="Suche: Name, Beschreibung, Sprache … (Taste /)" style="flex:1">
+<select id="filter" style="max-width:170px"><option value="all">Alle</option><option value="today">Heute</option><option value="ori">ORI</option><option value="green">Grün</option><option value="yellow">Gelb</option><option value="red">Rot</option><option value="new">Neu heute</option><option value="private">Privat</option></select>
+<select id="sort" style="max-width:150px"><option value="push">Letzter Push</option><option value="name">Name A–Z</option><option value="issues">Issues</option><option value="size">Größe</option></select>
+<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="onlyToday" style="width:auto"> Nur heute</label>
+</div><div class="stats" id="stats" style="margin-top:12px"></div>
+<div class="flex" style="margin-top:12px"><button class="btn" onclick="exportCSV()">CSV Export — All Out</button><button class="btn2" onclick="exportJSON()">JSON Export — All Out</button><button class="btn2" onclick="seed()">Beispiel-Repos laden</button><button class="btn2" onclick="clearAll()">Alle löschen</button></div></div>
+
+<div class="card"><b>Repo hinzufügen / bearbeiten — All In</b><span id="formMsg" class="mut"></span>
+<div class="row" style="margin-top:10px">
+<label>Repo-Name *<input id="f_name" placeholder="ori-notizen oder iki1uc/ori-notizen"></label>
+<label>GitHub-URL<input id="f_url" placeholder="https://github.com/…"></label>
+<label>Sprache<input id="f_lang" placeholder="TypeScript"></label>
+<label>Letzter Push<input id="f_push" type="datetime-local"></label>
+<label>Erstellt am<input id="f_created" type="date"></label>
+<label>Beschreibung<input id="f_desc" placeholder="Kurzbeschreibung"></label>
+<label>Offene Issues<input id="f_issues" type="number" value="0"></label>
+<label>Sterne<input id="f_stars" type="number" value="0"></label>
+<label>Größe KB<input id="f_size" type="number" value="0"></label>
+</div><div class="flex" style="margin-top:10px">
+<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f_priv" style="width:auto"> Privat</label>
+<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f_fork" style="width:auto"> Fork</label>
+<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="f_arch" style="width:auto"> Archiviert</label>
+<button class="btn" onclick="saveRepo()">Speichern</button><button class="btn2" onclick="resetForm()">Abbrechen / Leeren</button></div></div>
+
+<div id="list" class="grid"></div>
+<p class="mut">Taste <b>/</b> fokussiert die Suche. lvl ersetzt index.html nicht — es ist die saubere Schicht daneben. Wenn du willst, kopierst du lvl.html über index.html, oder lässt beide: index.html = beide Aufgaben, lvl.html = nur dieses Dashboard, schnell + lesbar.</p>
+</div>
+<script>
+const K='lvl_repos', KO='lvl_overrides';
+let repos=JSON.parse(localStorage.getItem(K)||'[]');
+let overrides=JSON.parse(localStorage.getItem(KO)||'{}');
+let editId=null;
+const COL={green:'#22c55e',yellow:'#eab308',red:'#ef4444',gold:'#f5c542'};
+const sameDay=(a,b)=>new Date(a).toDateString()===new Date(b).toDateString();
+const isToday=d=>sameDay(d,new Date());
+const isOri=r=>r.name.toLowerCase().includes('ori');
+function autoColor(r){ if((Date.now()-new Date(r.pushed_at).getTime())/2592000000>6) return 'red'; if(r.open_issues_count>0) return 'yellow'; return 'green'; }
+function colorOf(r){ return overrides[r.full_name]||autoColor(r); }
+function rel(d){ let s=(Date.now()-new Date(d).getTime())/1000; if(s<60) return 'gerade eben'; if(s<3600) return 'vor '+Math.floor(s/60)+' Min.'; if(s<86400) return 'vor '+Math.floor(s/3600)+' Std.'; let t=Math.floor(s/86400); if(t===1) return 'gestern'; return 'vor '+t+' Tagen'; }
+function fmtKB(k){ if(k<1024) return k+' KB'; if(k<1048576) return (k/1024).toFixed(1)+' MB'; return (k/1048576).toFixed(2)+' GB'; }
+function filtered(){
+ let q=document.getElementById('q').value.trim().toLowerCase(), f=document.getElementById('filter').value, s=document.getElementById('sort').value, only=document.getElementById('onlyToday').checked;
+ let out=repos.filter(r=>{ if(only&&!isToday(r.pushed_at)) return false;
+  if(f==='today'&&!isToday(r.pushed_at)) return false; if(f==='ori'&&!isOri(r)) return false;
+  if(['green','yellow','red'].includes(f)&&colorOf(r)!==f) return false;
+  if(f==='new'&&!isToday(r.created_at)) return false; if(f==='private'&&!r.private) return false;
+  if(q&&!(r.name+' '+(r.description||'')+' '+(r.language||'')).toLowerCase().includes(q)) return false; return true; });
+ out.sort((a,b)=> s==='name'?a.name.localeCompare(b.name,'de') : s==='issues'?b.open_issues_count-a.open_issues_count : s==='size'?b.size-a.size : new Date(b.pushed_at)-new Date(a.pushed_at));
+ return out;
+}
+function render(){
+ let list=filtered(), today=repos.filter(r=>isToday(r.pushed_at)).length, ori=repos.filter(isOri).length, neu=repos.filter(r=>isToday(r.created_at)).length;
+ let cnt={green:0,yellow:0,red:0}; repos.forEach(r=>cnt[colorOf(r)]++);
+ let total=repos.reduce((a,r)=>a+(r.size||0),0);
+ document.getElementById('stats').innerHTML=[
+  ['Repos gesamt',repos.length],['Heute gepusht',today],['ORI Repos',ori],['Neu heute',neu],
+  ['Grün',cnt.green],['Gelb',cnt.yellow],['Rot',cnt.red],['Daten gesamt',fmtKB(total)]
+ ].map(x=>`<div class="stat"><b>${x[1]}</b><span class="mut">${x[0]}</span></div>`).join('');
+ document.getElementById('list').innerHTML=list.length?list.map(r=>{
+  let c=colorOf(r), man=!!overrides[r.full_name];
+  return `<div class="repo ${isOri(r)?'ori':''}"><div class="dot" style="background:${COL[c]}" title="Farbe wechseln: ${c}${man?' (manuell)':''}" onclick="cycle('${r.full_name}')"></div><b>${r.name}</b><br>
+  ${isOri(r)?'<span class="badge gold">ORI · wichtigster Ort</span>':''}${isToday(r.pushed_at)?'<span class="badge lime">HEUTE</span>':''}${isToday(r.created_at)?'<span class="badge ghost">NEU HEUTE</span>':''}${r.private?'<span class="badge ghost">privat</span>':''}${r.fork?'<span class="badge ghost">Fork</span>':''}${r.archived?'<span class="badge ghost">Archiviert</span>':''}${man?'<span class="badge ghost">Farbe manuell</span>':''}
+  <p class="mut">${r.description||''}</p><p class="mut">Push: ${rel(r.pushed_at)} · ${new Date(r.pushed_at).toLocaleString('de-DE')} · Issues ${r.open_issues_count} · ⭐ ${r.stargazers_count} · ${r.size} KB · ${r.language||'–'}</p>
+  <div class="flex"><a href="${r.html_url}" target="_blank" rel="noopener" style="color:var(--a)">auf GitHub öffnen ↗</a><button class="btn2" onclick="editRepo('${r.id}')">Bearbeiten</button><button class="btn2" onclick="delRepo('${r.id}')">Löschen</button></div></div>`;
+ }).join(''):`<div class="card">Keine Repos für Filter. → Repo hinzufügen, oder Beispiel laden.</div>`;
+}
+function cycle(full){ let order=['green','yellow','red','gold'], cur=colorOf(repos.find(r=>r.full_name===full)); overrides[full]=order[(order.indexOf(cur)+1)%order.length]; localStorage.setItem(KO,JSON.stringify(overrides)); render(); }
+function saveRepo(){
+ let name=document.getElementById('f_name').value.trim(); if(!name){document.getElementById('formMsg').textContent=' Bitte Repo-Namen eingeben.';return}
+ let user=document.getElementById('user').value.trim()||'iki1uc'; let full=name.includes('/')?name:user+'/'+name; let short=full.split('/').slice(1).join('/');
+ let r={id:editId||('id'+Date.now()),name:short,full_name:full,html_url:document.getElementById('f_url').value.trim()||('https://github.com/'+full),description:document.getElementById('f_desc').value.trim()||null,pushed_at:new Date(document.getElementById('f_push').value||Date.now()).toISOString(),created_at:new Date(document.getElementById('f_created').value||Date.now()).toISOString(),open_issues_count:+document.getElementById('f_issues').value||0,size:+document.getElementById('f_size').value||0,language:document.getElementById('f_lang').value.trim()||null,stargazers_count:+document.getElementById('f_stars').value||0,private:document.getElementById('f_priv').checked,fork:document.getElementById('f_fork').checked,archived:document.getElementById('f_arch').checked};
+ if(editId) repos=repos.map(x=>x.id===editId?r:x); else repos=[r,...repos];
+ localStorage.setItem(K,JSON.stringify(repos)); editId=null; resetForm(); document.getElementById('formMsg').textContent=' Gespeichert — frei, lokal (lvl).'; render();
+}
+function editRepo(id){ let r=repos.find(x=>x.id===id); if(!r) return; editId=id;
+ document.getElementById('f_name').value=r.full_name; document.getElementById('f_url').value=r.html_url; document.getElementById('f_lang').value=r.language||'';
+ document.getElementById('f_push').value=r.pushed_at.slice(0,16); document.getElementById('f_created').value=r.created_at.slice(0,10);
+ document.getElementById('f_desc').value=r.description||''; document.getElementById('f_issues').value=r.open_issues_count;
+ document.getElementById('f_stars').value=r.stargazers_count; document.getElementById('f_size').value=r.size;
+ document.getElementById('f_priv').checked=r.private; document.getElementById('f_fork').checked=r.fork; document.getElementById('f_arch').checked=r.archived;
+ window.scrollTo({top:0,behavior:'smooth'}); }
+function delRepo(id){ if(!confirm('Wirklich löschen?')) return; repos=repos.filter(x=>x.id!==id); localStorage.setItem(K,JSON.stringify(repos)); render(); }
+function resetForm(){ editId=null; ['f_name','f_url','f_lang','f_push','f_created','f_desc'].forEach(i=>document.getElementById(i).value=''); ['f_issues','f_stars','f_size'].forEach(i=>document.getElementById(i).value='0'); ['f_priv','f_fork','f_arch'].forEach(i=>document.getElementById(i).checked=false); document.getElementById('formMsg').textContent=''; }
+function seed(){ let now=new Date().toISOString(); repos=[
+ {id:'s1',name:'ori-notizen',full_name:'iki1uc/ori-notizen',html_url:'https://github.com/iki1uc/ori-notizen',description:'ORI wichtigster Ort',pushed_at:now,created_at:now,open_issues_count:0,size:128,language:'HTML',stargazers_count:3,private:false,fork:false,archived:false},
+ {id:'s2',name:'index.e',full_name:'iki1uc/index.e',html_url:'https://github.com/iki1uc/index.e',description:'index.html beide Aufgaben frei',pushed_at:now,created_at:now,open_issues_count:1,size:256,language:'TypeScript',stargazers_count:5,private:false,fork:false,archived:false}];
+ localStorage.setItem(K,JSON.stringify(repos)); render(); }
+function clearAll(){ if(!confirm('Alle lvl-Repos + Overrides löschen?')) return; repos=[]; overrides={}; localStorage.removeItem(K); localStorage.removeItem(KO); render(); }
+function dl(name,content,type){ let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type})); a.download=name; a.click(); }
+function exportCSV(){ if(!repos.length){alert('Erst laden / anlegen');return} let rows=['Name;URL;Letzter Push;Offene Issues;Sprache;Farbe;ORI;Privat']; repos.forEach(r=>rows.push([r.name,r.html_url,r.pushed_at,r.open_issues_count,r.language||'',colorOf(r),isOri(r)?'ja':'nein',r.private?'ja':'nein'].join(';'))); dl('lvl_repos_'+new Date().toISOString().slice(0,10)+'.csv','\uFEFF'+rows.join('\r\n'),'text/csv'); }
+function exportJSON(){ dl('lvl_repos_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(repos.map(r=>({...r,ori:isOri(r),color:colorOf(r)})),null,2),'application/json'); }
+['q','filter','sort','onlyToday'].forEach(i=>document.getElementById(i).addEventListener('input',render));
+document.getElementById('filter').addEventListener('change',render); document.getElementById('sort').addEventListener('change',render);
+window.addEventListener('keydown',e=>{ if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();document.getElementById('q').focus();}});
+render();
+</script></body></html>
